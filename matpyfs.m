@@ -16,12 +16,13 @@ function [results] = matpyfs(funcname, funcargs_struct, modulename, modulepath, 
 
     infname = fullfile(inoutpath, [inoutfname_template '_in.mat']);
     outfname = fullfile(inoutpath, [inoutfname_template '_out.mat']);
-
+    
+    matpyfs_path = [fileparts(which('matpyfs.m')) '/'];
     funcargs = funcargs_struct;
     save(infname, 'funcargs');
 
     
-    cmd = ([pythoncmd 'matpyfs.py' ' -f' funcname ' -m ' modulename ' -p' modulepath ...
+    cmd = ([pythoncmd matpyfs_path 'matpyfs.py' ' -f' funcname ' -m ' modulename ' -p' modulepath ...
             ' -i' infname, ' -o' outfname]);
     %    disp(cmd)                           
     system(cmd)
