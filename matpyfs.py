@@ -9,8 +9,11 @@ def main(args):
 
     # load the arguments
     inmat = scipy.io.loadmat('{args[infile]}'.format(**locals()))
-    funcargs = {k:inmat['funcargs'][k] for k in inmat['funcargs'].dtype.names}
-                            
+    if inmat['funcargs'].dtype.names is not None:
+        funcargs = {k:inmat['funcargs'][k] for k in inmat['funcargs'].dtype.names}
+    else:                    
+        funcargs = {}
+
     # import the module
     sys.path.append('{args[path]}'.format(**locals())) # Add the module path
     mdl = importlib.import_module('{args[modulename]}'.format(**locals()))
@@ -19,7 +22,11 @@ def main(args):
     res_tuple = eval('mdl.{args[funcname]}(**{funcargs})'.format(**locals()))
 
     # save the results
-    results = {'arg%d'%k:val for k,val in enumerate(res_tuple)}
+    if res_tuple is not None:
+        results = {'arg%d'%k:val for k,val in enumerate(res_tuple)}
+    else:
+        results = {}
+
     scipy.io.savemat('{args[outfile]}'.format(**locals()), results)
 
     
