@@ -3,6 +3,7 @@ import scipy.io
 import importlib
 import sys
 from numpy import *
+import os
 
 
 def main(args):
@@ -15,11 +16,14 @@ def main(args):
         funcargs = {}
 
     # import the module
-    sys.path.append('{args[path]}'.format(**locals())) # Add the module path
+    module_path = '{args[path]}'.format(**locals())
+    sys.path.append(module_path) # Add the module path
     mdl = importlib.import_module('{args[modulename]}'.format(**locals()))
-    # call the function
     
-    res_tuple = eval('mdl.{args[funcname]}(**{funcargs})'.format(**locals()))
+    # call the function
+    funcargs_str = ', '.join(["%s = funcargs['%s']"%(k,k) for k in funcargs.keys()])
+    func_call_cmd = 'mdl.{args[funcname]}({funcargs_str})'.format(**locals())
+    res_tuple = eval(func_call_cmd)
 
     # save the results
     if res_tuple is not None:

@@ -1,17 +1,18 @@
 function [results] = matpyfs(funcname, funcargs_struct, modulename, modulepath, ...
-                             inoutpath, inoutfname_template, pythoncmd)
+                             pythoncmd, inoutpath, inoutfname_template)
 
     if nargin < 5
-        inoutpath = '/tmp/';
-    end % if nargin < 5
+        pythoncmd = 'python';
+    end % if nargin 
 
     if nargin < 6
-        [~, inoutfname_template] = fileparts(tempname);
-    end % if nargin < 5
+        inoutpath = '/tmp/';
+    end % if nargin 
 
     if nargin < 7
-        pythoncmd = 'python ';
-    end % if nargin < 6
+        [~, inoutfname_template] = fileparts(tempname);
+    end % if nargin 
+
 
 
     infname = fullfile(inoutpath, [inoutfname_template '_in.mat']);
@@ -22,7 +23,7 @@ function [results] = matpyfs(funcname, funcargs_struct, modulename, modulepath, 
     save(infname, 'funcargs');
 
     
-    cmd = ([pythoncmd matpyfs_path 'matpyfs.py' ' -f' funcname ' -m ' modulename ' -p' modulepath ...
+    cmd = ([pythoncmd ' ' matpyfs_path 'matpyfs.py' ' -f' funcname ' -m ' modulename ' -p' modulepath ...
             ' -i' infname, ' -o' outfname]);
     %    disp(cmd)                           
     system(cmd)
